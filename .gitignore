@@ -4,3 +4,9 @@ node_modules/
 __pycache__/
 .DS_Store
 *.log
+deployment/key/
+*.pem
+*.key
+id_rsa
+id_ed25519
+id_ed25519.pub
