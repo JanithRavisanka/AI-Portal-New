@@ -1,0 +1,26 @@
+[Unit]
+Description=Keycloak Identity Provider
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/keycloak
+EnvironmentFile=/opt/ai-portal/.env
+Environment=KC_PROXY_HEADERS=xforwarded
+Environment=KC_SSL_REQUIRED=external
+Environment=KC_HTTP_ENABLED=true
+
+ExecStart=/opt/keycloak/bin/kc.sh start \
+  --hostname=https://aistudentchapter.lk/keycloak \
+  --http-port=8080 \
+  --https-certificate-file=/etc/letsencrypt/live/aistudentchapter.lk/fullchain.pem \
+  --https-certificate-key-file=/etc/letsencrypt/live/aistudentchapter.lk/privkey.pem \
+  --http-enabled=true
+
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

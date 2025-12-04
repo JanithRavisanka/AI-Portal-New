@@ -1,0 +1,24 @@
+[Unit]
+Description=Auth Service Docker Container
+After=docker.service network.target keycloak.service
+Requires=docker.service
+
+[Service]
+Restart=always
+ExecStartPre=-/usr/bin/docker stop ai_portal_auth_service
+ExecStartPre=-/usr/bin/docker rm ai_portal_auth_service
+# Image is built locally/remotely and tagged deployment-auth-service:latest
+ExecStart=/usr/bin/docker run --rm --name ai_portal_auth_service \
+  --network ai_portal_net \
+  -p 3002:3002 \
+  -e NODE_ENV=production \
+  -e PORT=3002 \
+  -e KEYCLOAK_URL=https://aistudentchapter.lk/keycloak \
+  -e KEYCLOAK_REALM=master \
+  -e KEYCLOAK_CLIENT_ID=account \
+  deployment-auth-service:latest
+
+ExecStop=/usr/bin/docker stop ai_portal_auth_service
+
+[Install]
+WantedBy=multi-user.target
